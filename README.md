@@ -25,7 +25,7 @@ git add	gamll/
 提交到本地仓库
 git commit -m "测试仓库的拉取和提交" gamll/
 提交到远程仓库
-git push git@github.com:hh2134/gmall.git master
+git push git@github.com:hh2134/gmall.git main
 ```
 
 ## 3.基础工程copy
