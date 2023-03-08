@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: pms-service
+  cloud:
+    nacos:
+      config:
+#       nacos的连接地址
+        server-addr: localhost:8848
+#       登陆nacos，在命名空间中新建，命名空间名称：pms，描述：谷粒商城商品管理系统，复制所生成的命名空间ID
+#       nacos的pms的命名空间ID
+        namespace: d6a420a1-e34e-4980-aec3-1b8afa451bd8
+#       分组：dev
+        group: dev
+#       文件扩展名：yml格式
+        file-extension: yml
