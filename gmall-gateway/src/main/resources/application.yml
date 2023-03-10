@@ -27,3 +27,4 @@ spring:
           uri: lb://ums-service
           predicates:
             - Path=/ums/**
+

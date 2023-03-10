@@ -127,7 +127,13 @@ sentinel启动，在根目录下cmd，运行 `java -jar sentinel-dashboard-1.8.2
 
 zipkin启动，在根目录下cmd，运行 `java -jar zipkin-server-2.20.2-exec.jar`
 
-Mysql启动，在虚拟机启动mysql8.0版本的mysql，运行 `systemctl start mysqld` 远程连接后，导入sql文件
+Mysql启动，在虚拟机启动mysql8.0版本的mysql，运行 `systemctl start mysqld` 访问链接 `192.168.44.100` 端口 `3306` 登陆账号 `root` 密码 `MySQL8.0.32` 远程连接后，导入sql文件
+
+Tomcat启动，在虚拟机启动apache-tomcat-7.0.70，运行 `/software/apache-tomcat-7.0.70/bin/shutdown.sh` 访问地址 `192.168.44.100:8080`
+
+Nginx启动，在虚拟机进入 `/usr/local/nginx/sbin` 目录,执行 `./nginx`，版本Nginx-1.12.2访问地址 `192.168.44.100:80`
+
+node启动，在node目录中启动cmd，输入 `node server.js`，版本Node-v12.15.0
 
 ## 6.以pms为例搭建模块
 
@@ -354,7 +360,7 @@ tablePrefix=pms_
 
 ## 9.测试连接gmall-pms
 
-启动 **gmall-pms** 访问地址 `http://localhost:18081/pms/brand` 
+启动 **GmallPmsApplication** 访问地址 `http://localhost:18081/pms/brand` 
 
 显示
 
@@ -540,6 +546,10 @@ public class MybatisPlusConfig {
 
     - **guli\main\resources** 下的 **mapper** 包复制到 **gmall-sms/src/main/resources** 包下
 
+18. 测试连接启动 **GmallSmsApplication** 
+
+    `http://localhost:18082/sms/skubounds`
+
 ## 11.搭建网关工程
 
 gmall-gateway：谷粒商城网关系统
@@ -565,7 +575,35 @@ gmall-gateway：谷粒商城网关系统
    application.yml
 
    ```yaml
-   
+   server:
+     port: 8888
+   spring:
+     cloud:
+       nacos:
+         discovery:
+           server-addr: localhost:8848
+       gateway:
+         routes:
+           - id: pms-route
+             uri: lb://pms-service
+             predicates:
+               - Path=/pms/**
+           - id: sms-route
+             uri: lb://sms-service
+             predicates:
+               - Path=/sms/**
+           - id: oms-route
+             uri: lb://oms-service
+             predicates:
+               - Path=/oms/**
+           - id: wms-route
+             uri: lb://wms-service
+             predicates:
+               - Path=/wms/**
+           - id: ums-route
+             uri: lb://ums-service
+             predicates:
+               - Path=/ums/**
    ```
 
 8. 新建 **gmall-sms/src/main/resources/bootstrap.yml**
@@ -586,11 +624,446 @@ gmall-gateway：谷粒商城网关系统
            file-extension: yml
    ```
 
-9. 
+9. 测试连接启动 **GmallGatewayApplication** & **GmallSmsApplication**
 
-   
+   `http://localhost:8888/sms/skubounds`
 
+## 12.通过nginx解决端口问题
+
+1. 在 **C:\Windows\System32\drivers\etc** 目录下配置 **hosts**
+
+   hosts
+
+   ```
+   192.168.44.100 api.gmall.com manager.gmall.com www.gmall.com
+   ```
+
+2. 在物理机获取ip，按win+r键，输入 `cmd`，执行 `ipconfig` 
+
+   ```
+   以太网适配器 VMware Network Adapter VMnet1:
    
+      连接特定的 DNS 后缀 . . . . . . . :
+      本地链接 IPv6 地址. . . . . . . . : fe80::4c94:7d21:d476:15a3%16
+      IPv4 地址 . . . . . . . . . . . . : 192.168.12.1
+      子网掩码  . . . . . . . . . . . . : 255.255.255.0
+   ```
+
+   获取到VMware Network Adapter VMnet1的IPv4地址
+
+   `192.168.12.1`
+
+   VMware Network Adapter VMnet1的ip不易发生改变，其他的IPv4会因为连接的网络不同而发生改变
+
+3. 进入虚拟机，在 **/usr/local/nginx/conf** 目录下，修改 **nginx.conf** 
+
+   nginx.conf
+
+   ```
+   worker_processes  1;
+   events {
+       worker_connections  1024;
+   }
+   
+   
+   http {
+       include       mime.types;
+       default_type  application/octet-stream;
+       sendfile        on;
+       keepalive_timeout  65;
+   
+       server {
+           listen       80;
+           server_name  api.gmall.com;
+           location / {
+               proxy_pass http://192.168.12.1:8888;
+           }
+           
+       }
+   
+       server{
+           listen       80;
+           server_name  manager.gmall.com;
+           location / {
+               proxy_pass http://192.168.12.1:1000;
+           }
+       }
+   }
+   ```
+
+流程
+
+![nginx加入之后的请求处理流程](image/nginx加入之后的请求处理流程.jpg)
+
+## 13.前后联调
+
+1. 启动前端工程gmall-admin，中的 **前端工程/gmall-admin**
+
+2. 在 **前端工程/gmall-admin** 目录中，输入cmd，输入 `npm start`
+
+   测试连接：
+
+   `localhost:1000`
+
+3. 修改 **gmall-admin/src/main/resources/application.yml** 中redis的连接配置
+
+4. 修改 **gmall-admin/src/main/resources/application-dev.yml** 中mysql的连接配置及连接账户和密码
+
+5. 启动后端工程gmall-admin，项目中的 **gmall/gmall-admin**，启动 **GmallAdminApplication**
+
+   测试连接：
+
+   `localhost:1000`
+
+   账户：admin密码：admin
+
+## 14.跨域问题
+
+![跨域问题](image/跨域问题.png)
+
+访问品牌管理失败
+
+![image-20230309120414016](image/image-20230309120414016.png)
+
+从连接“http://manager.gmall.com”访问“http://api.gmall.com/pms/brand?t=1678334331159&pageNum=1&pageSize=10&key=”的XMLHttpRequest已被CORS策略阻止:对预检请求的响应没有通过访问控制检查:所请求的资源上没有'Access- control - allow - origin '标头。
+
+![image-20230309120339167](image/image-20230309120339167.png)
+
+跨域：浏览器的同源策略导致的 
+
+http://api.gmall.com:10010/pms/brand
+
+1. 协议不同：http https
+2. 二级域名不同：api.gmall.com manager.gmall.com
+3. 一级域名不同：gmall.com jd.com tmall.com
+4. 端口号不同：10010 10086
+
+> 路径不同不属于跨域
+
+跨域并不总是有跨域问题，跨域问题是浏览器针对ajax请求的一种限制
+
+解决方案
+
+1. jsonp：把动态数据伪装成静态资源以骗过浏览器
+   1. 只能解决get请求的跨域问题
+   2. 前后端开发人员的密切配合
+
+2. nginx：反向代理为同一个域名
+
+3. cors规范：w3c提供的解决规范，需要服务器端配置白名单（域名 请求方式 头信息 是否可用携带cooke）
+
+   原理：两次请求
+
+   - 一次预检请求：
+     - 请求方法：OPTIONS
+     - 只有预检请求通过，才会发送真正的请求
+     - 响应标头失败
+       - Access-Control-Request-Headers: token
+       - Access-Control-Request-Method: GET
+       - Origin: http://manager.gmall.com
+     - 响应标头成功
+       - Access-Control-Allow-Credentials: true
+       - Access-Control-Allow-Headers: token
+       - Access-Control-Allow-Methods: GET,POST,PUT,DELETE,OPTIONS
+       - Access-Control-Allow-Origin: http://manager.gmall.com
+       - Access-Control-Max-Age: 3600
+
+   - 一次真正请求
+
+玩法：制作白名单
+
+1. nginx：通过cors实现跨域，配置 **nginx.conf**，将
+
+   ```
+   add_header Access-Control-Allow-Origin '*';  
+   add_header Access-Control-Allow-Credentials "true";
+   add_header Access-Control-Allow-Methods 'GET, POST, OPTIONS';
+   add_header Access-Control-Allow-Headers  'token,DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,XRequested-With';
+   ```
+
+   放入server{}中
+
+   缺点：违背了devops思想
+
+2. 网关配置：在 **application.yml** 配置 `spring.cloud.gateway.globalcors.cors-cofigurations`
+
+   ![image-20230309142513517](image/image-20230309142513517.png)
+
+   需要新建Map<K,V>
+
+   K存这类：Access-Control-Allow-Credentials
+
+   V存这类：true
+
+   缺点：语义不明
+
+3. 网关通过过滤器：
+
+   CorsWebFilter（适用与gateway）
+
+   CorsFilter（适用于zuul）
+
+4. 注解：@CrossOrigin
+
+## 15.解决跨域问题
+
+使用网关过滤器 `CorsWebFilter` 解决跨域问题
+
+在 **gmall-gateway/src/main/java/com/example/gmall/gateway/config** 新建 **CorsConfig.java** 
+
+CorsConfig.java
+
+```java
+package com.example.gmall.gateway.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsWebFilter;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+
+/**
+ * @ClassName CorsConfig
+ * @Author 鳄鱼魜
+ * @Date 2023/3/9 15:21
+ * @Version 1.0
+ * @Description 使用过滤器 CorsWebFilter 解决跨域问题
+ */
+
+@Configuration
+public class CorsConfig {
+
+    @Bean
+    public CorsWebFilter corsWebFilter(){
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        // 允许跨域访问的域名，”*“代表所有域名，不建议使用”*“，因为不安全，不能携带cookie
+        corsConfiguration.addAllowedOrigin("http://manager.gmall.com");
+        corsConfiguration.addAllowedOrigin("http://localhsot:1000");
+        // 允许跨域访问的请求方式，可以写“get”，“post”，建议写"*"，因为“*”代表任何请求方式
+        corsConfiguration.addAllowedMethod("*");
+        // 是否允许携带cookie，允许
+        corsConfiguration.setAllowCredentials(true);
+        // 允许跨域访问的头信息，“*”表示任意访问
+        corsConfiguration.addAllowedHeader("*");
+        UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
+        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**",corsConfiguration);
+        return new CorsWebFilter(urlBasedCorsConfigurationSource);
+    }
+
+}
+```
+
+启动服务
+
+`GmallGatewayApplication`
+
+`GmallPmsApplication`
+
+`GmallAdminApplication`
+
+测试连接：
+
+http://manager.gmall.com/
+
+查看
+
+![image-20230309153812948](image/image-20230309153812948.png)
+
+## 16.图片上传
+
+1. 用aliyun的oss来存储图片
+
+   使用文档 https://help.aliyun.com/document_detail/31927.html 
+
+2. 进入aliyun的OSS控制台
+
+   https://oss.console.aliyun.com/overview
+
+   bucket列表
+
+   ![image-20230309162258504](image/image-20230309162258504.png)
+
+   创建bucket（选择低频访问存储，公共读）
+
+   ![bucket](image/bucket.png)
+
+   跨域设置规则
+
+   ![image-20230309161840088](image/image-20230309161840088.png)
+
+3. 查看上传图片的请求网址
+
+   ![image-20230309155823706](image/image-20230309155823706.png)
+
+   可以看出上传图片的请求网址是 http://api.gmall.com/pms/oss/policy?t=1678348677810
+
+   请求路径是 **api.gmall.com/pms/oss/policy**
+
+   **?t=1678348677810** 这个是防止浏览器缓存的随机值
+
+4. 创建密钥
+
+   AccessKey管理
+
+   ![image-20230309162623716](image/image-20230309162623716.png)
+
+   使用子用户 -> 创建用户
+
+   ![image-20230309162542733](image/image-20230309162542733.png)
+
+   用户
+
+   ![image-20230309161717647](image/image-20230309161717647.png)
+
+   获取到 
+
+   AccessKey ID：`LTAI5tFCfUQy2JgwZTkbH9ea`
+
+   AccessKey Secret：`iseWdd6lMZMpbvtsUdsuYKPWXJyrk4`
+
+   添加权限（AliyunOSSFullAccess：表示所有权限）
+
+   ![image-20230309163831516](image/image-20230309163831516.png)
+
+5. gmall-eyvren -> 概述 -> 外网访问
+
+   ![image-20230309164454411](image/image-20230309164454411.png)
+
+   获取到地域节点： `oss-cn-shanghai.aliyuncs.com`
+
+6. bucket列表 -> bucket名称 -> 复制 gmall-eyvren
+
+   ![image-20230309164608649](image/image-20230309164608649.png)
+
+   获取到bucket名称：`gmall-eyvren`
+
+7. 需要的参数
+
+   ```java
+   // 代码直接 copy 官方文档
+   String accessId = "AccessKey ID";
+   String accessKey = "AccessKey Secret";
+   String endpoint = "地域节点";
+   String bucket = "bucket名称";
+   ```
+
+8. 在 **gmall-pms/src/main/java/com/atguigu/gmall/pms/controller** 目录下新建 **OssController.java**
+
+   OssController.java
+
+   ```java
+   package com.atguigu.gmall.pms.controller;
+   
+   import com.aliyun.oss.OSS;
+   import com.aliyun.oss.OSSClientBuilder;
+   import com.aliyun.oss.common.utils.BinaryUtil;
+   import com.aliyun.oss.model.MatchMode;
+   import com.aliyun.oss.model.PolicyConditions;
+   import com.atguigu.gmall.common.bean.ResponseVo;
+   import org.apache.commons.net.ftp.FTP;
+   import org.apache.commons.net.ftp.FTPClient;
+   import org.springframework.web.bind.annotation.GetMapping;
+   import org.springframework.web.bind.annotation.RequestMapping;
+   import org.springframework.web.bind.annotation.RestController;
+   
+   import java.io.File;
+   import java.io.FileInputStream;
+   import java.io.IOException;
+   import java.text.SimpleDateFormat;
+   import java.util.Date;
+   import java.util.LinkedHashMap;
+   import java.util.Map;
+   
+   /**
+    * @ClassName OssController
+    * @Author 鳄鱼魜
+    * @Date 2023/3/9 16:58
+    * @Version 1.0
+    * @Description 图片上传到阿里云OSS
+    */
+   
+   @RestController
+   @RequestMapping("pms/oss")
+   public class OssController {
+   
+       @GetMapping("policy")
+       public ResponseVo<Object> policy() {
+           // 阿里云账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM用户进行API访问或日常运维，请登录RAM控制台创建RAM用户。
+           String accessId = "LTAI5tFCfUQy2JgwZTkbH9ea";
+           String accessKey = "iseWdd6lMZMpbvtsUdsuYKPWXJyrk4";
+           // Endpoint以华东1（杭州）为例，其它Region请按实际情况填写。
+           String endpoint = "oss-cn-shanghai.aliyuncs.com";
+           // 填写Bucket名称，例如examplebucket。
+           String bucket = "gmall-eyvren";
+           // 填写Host地址，格式为https://bucketname.endpoint。
+           String host = "https://" + bucket + "." + endpoint;
+           // 设置上传到OSS文件的前缀，可置空此项。置空后，文件将上传至Bucket的根目录下。
+           Date date = new Date();
+           // 以 yyyy-MM-dd 名称方式创建文件夹来存储
+           String dir = new SimpleDateFormat("yyyy-MM-dd").format(date);
+   
+           // 创建ossClient实例。
+           OSS ossClient = new OSSClientBuilder().build(endpoint, accessId, accessKey);
+           try {
+               long expireTime = 30;
+               long expireEndTime = System.currentTimeMillis() + expireTime * 1000;
+               Date expiration = new Date(expireEndTime);
+               PolicyConditions policyConds = new PolicyConditions();
+               policyConds.addConditionItem(PolicyConditions.COND_CONTENT_LENGTH_RANGE, 0, 1048576000);
+               policyConds.addConditionItem(MatchMode.StartWith, PolicyConditions.COND_KEY, dir);
+   
+               String postPolicy = ossClient.generatePostPolicy(expiration, policyConds);
+               byte[] binaryData = postPolicy.getBytes("utf-8");
+               String encodedPolicy = BinaryUtil.toBase64String(binaryData);
+               String postSignature = ossClient.calculatePostSignature(postPolicy);
+   
+               Map<String, String> respMap = new LinkedHashMap<String, String>();
+               respMap.put("accessid", accessId);
+               respMap.put("policy", encodedPolicy);
+               respMap.put("signature", postSignature);
+               respMap.put("dir", dir);
+               respMap.put("host", host);
+               respMap.put("expire", String.valueOf(expireEndTime / 1000));
+               // respMap.put("expire", formatISO8601Date(expiration));
+   
+               return ResponseVo.ok(respMap);
+   
+           } catch (Exception e) {
+               // Assert.fail(e.getMessage());
+               System.out.println(e.getMessage());
+           }
+           return ResponseVo.fail("获取签名失败！");
+   
+       }
+   
+   }
+   ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
