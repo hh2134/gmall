@@ -6,8 +6,7 @@ import com.aliyun.oss.common.utils.BinaryUtil;
 import com.aliyun.oss.model.MatchMode;
 import com.aliyun.oss.model.PolicyConditions;
 import com.atguigu.gmall.common.bean.ResponseVo;
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +32,7 @@ import java.util.Map;
 public class OssController {
 
     @GetMapping("policy")
-    public ResponseVo<Object> policy() {
+    public ResponseVo<Object> queryObjectBy() {
         // 阿里云账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM用户进行API访问或日常运维，请登录RAM控制台创建RAM用户。
         String accessId = "LTAI5tFCfUQy2JgwZTkbH9ea";
         String accessKey = "iseWdd6lMZMpbvtsUdsuYKPWXJyrk4";

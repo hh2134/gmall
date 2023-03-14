@@ -1,6 +1,7 @@
 package com.atguigu.gmall.pms.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +33,15 @@ public class SpuController {
 
     @Autowired
     private SpuService spuService;
+
+    @GetMapping("/category/{categoryId}")
+    @ApiOperation("查询spu列表")
+    public ResponseVo<PageResultVo> queryPageResultVoByCategoryIdPage(@PathVariable("categoryId")Long categoryId,PageParamVo paramVo){
+        PageResultVo resultVo=this.spuService.querySpuByCategoryIdPage(categoryId,paramVo);
+
+        return ResponseVo.ok(resultVo);
+    }
+
 
     /**
      * 列表

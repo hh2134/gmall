@@ -33,6 +33,19 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    /*
+    * 商品分类查询
+    * CategoryEntity 是表 pms_category 的实体类
+    * parentId 是请求参数
+    * */
+    @GetMapping("/parent/{parentId}")
+    @ApiOperation("商品分类查询")
+    public ResponseVo<List<CategoryEntity>> queryCategoryByParentId(@PathVariable("parentId")Long parentId){
+        List<CategoryEntity> categoryEntityList = this.categoryService.categoryParent(parentId);
+
+        return ResponseVo.ok(categoryEntityList);
+    }
+
     /**
      * 列表
      */
@@ -88,5 +101,6 @@ public class CategoryController {
 
         return ResponseVo.ok();
     }
+
 
 }

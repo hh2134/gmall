@@ -45,3 +45,6 @@ mybatis-plus:
     db-config:
 #     配置mybatis-plus的id策略默认是分布式ID自动自增
       id-type: auto
+logging:
+  level:
+    com.atguigu.gmall.pms: debug

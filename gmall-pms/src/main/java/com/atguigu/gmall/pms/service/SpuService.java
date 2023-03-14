@@ -15,5 +15,8 @@ import com.atguigu.gmall.pms.entity.SpuEntity;
 public interface SpuService extends IService<SpuEntity> {
 
     PageResultVo queryPage(PageParamVo paramVo);
+
+
+    PageResultVo querySpuByCategoryIdPage(Long categoryId, PageParamVo paramVo);
 }
 

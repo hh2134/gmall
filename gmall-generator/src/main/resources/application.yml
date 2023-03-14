@@ -8,7 +8,7 @@ spring:
     #MySQL配置
     driverClassName: com.mysql.cj.jdbc.Driver
 #    修改远程连接mysql的ip，修改guli_oms改成需要生成代码的数据库名
-    url: jdbc:mysql://192.168.44.100:3306/guli_sms?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    url: jdbc:mysql://192.168.44.100:3306/guli_wms?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     username: root
 #    修改远程mysql的密码
     password: MySQL8.0.32

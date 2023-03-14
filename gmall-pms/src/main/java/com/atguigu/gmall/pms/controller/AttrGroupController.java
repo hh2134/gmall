@@ -2,6 +2,7 @@ package com.atguigu.gmall.pms.controller;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,22 @@ public class AttrGroupController {
 
     @Autowired
     private AttrGroupService attrGroupService;
+
+    /*
+    * 查询三级分类的分组
+    * AttrGroupService 接口继承 IService
+    * 获取到 IService 中的 list 方法
+    * 传入 queryWrapper 参数
+    * QueryWrapper()<> 是 MyBatis 中的条件构造器；eq("name","小明") 表示等于 name='小明', ；ne("name","小明"): 表示不等于，即 name='小明' 的数据都不要
+    * attrGroupEntityList 的输出是json格式
+    * */
+    @GetMapping("/category/{cid}")
+    @ApiOperation("查询三级分类的分组")
+    public ResponseVo<List<AttrGroupEntity>> queryAttrGroupByCid(@PathVariable("cid")Long cid){
+        List<AttrGroupEntity> attrGroupEntityList = this.attrGroupService.list(new QueryWrapper<AttrGroupEntity>().eq("category_id", cid));
+
+        return ResponseVo.ok(attrGroupEntityList);
+    }
 
     /**
      * 列表
