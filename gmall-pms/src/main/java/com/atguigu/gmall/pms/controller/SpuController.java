@@ -3,6 +3,7 @@ package com.atguigu.gmall.pms.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.atguigu.gmall.pms.vo.SpuVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,8 +72,9 @@ public class SpuController {
      */
     @PostMapping
     @ApiOperation("保存")
-    public ResponseVo<Object> save(@RequestBody SpuEntity spu){
-		spuService.save(spu);
+    public ResponseVo<Object> save(@RequestBody SpuVo spu){
+//		spuService.save(spu);
+        spuService.bigSave(spu);    // 要进行手动保存
 
         return ResponseVo.ok();
     }
@@ -82,7 +84,7 @@ public class SpuController {
      */
     @PostMapping("/update")
     @ApiOperation("修改")
-    public ResponseVo update(@RequestBody SpuEntity spu){
+    public ResponseVo update(@RequestBody SpuVo spu){
 		spuService.updateById(spu);
 
         return ResponseVo.ok();

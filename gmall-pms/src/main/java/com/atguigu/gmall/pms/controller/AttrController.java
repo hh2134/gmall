@@ -8,12 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.atguigu.gmall.pms.entity.AttrEntity;
 import com.atguigu.gmall.pms.service.AttrService;
@@ -35,6 +30,26 @@ public class AttrController {
 
     @Autowired
     private AttrService attrService;
+
+    @GetMapping("/category/{cid}")
+    @ApiOperation("查询分类下的规格参数")
+    public ResponseVo<List<AttrEntity>> queryAttrByCidTypeSearchType(
+
+        // @RequestParam("type")Integer type 默认是必须的，而接口文档可要可不要
+        //有两种处理方式
+        // 1.第一种 @RequestParam("type",required = false)，required 默认是ture
+        // 2.第二种 @RequestParam("type",defaultValue = )，defaultValue 表示设置默认值
+        // 优先使用 defaultValue ，如果不能则使用 required
+        // 这里无法使用 defaultValue
+        @PathVariable("cid")Long cid,
+        @RequestParam(value = "type",required = false)Integer type,
+        @RequestParam(value = "searchType",required = false)Integer searchType
+    ){
+
+        List<AttrEntity> attrEntityList = this.attrService.queryAttrByCidTypeSearchType(cid,type,searchType);
+
+        return ResponseVo.ok(attrEntityList);
+    }
 
     /*
     * 查询组下的规格参数

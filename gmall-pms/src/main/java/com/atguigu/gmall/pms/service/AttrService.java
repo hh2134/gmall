@@ -5,6 +5,8 @@ import com.atguigu.gmall.common.bean.PageResultVo;
 import com.atguigu.gmall.common.bean.PageParamVo;
 import com.atguigu.gmall.pms.entity.AttrEntity;
 
+import java.util.List;
+
 /**
  * 商品属性
  *
@@ -15,5 +17,7 @@ import com.atguigu.gmall.pms.entity.AttrEntity;
 public interface AttrService extends IService<AttrEntity> {
 
     PageResultVo queryPage(PageParamVo paramVo);
+
+    List<AttrEntity> queryAttrByCidTypeSearchType(Long cid, Integer type, Integer searchType);
 }
 

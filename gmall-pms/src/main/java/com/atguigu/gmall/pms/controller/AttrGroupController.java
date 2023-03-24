@@ -34,6 +34,14 @@ public class AttrGroupController {
     @Autowired
     private AttrGroupService attrGroupService;
 
+    @GetMapping("/withattrs/{catId}")
+    @ApiOperation("查询分类下的组及规格参数")
+    public ResponseVo<List<AttrGroupEntity>> queryAttrGroupByCatId(@PathVariable("catId")Long catId){
+        List<AttrGroupEntity> attrGroupEntityList = this.attrGroupService.queryAttrGroupByCatId(catId);
+
+        return ResponseVo.ok(attrGroupEntityList);
+    }
+
     /*
     * 查询三级分类的分组
     * AttrGroupService 接口继承 IService

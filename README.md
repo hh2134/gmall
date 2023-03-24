@@ -1,6 +1,38 @@
 # gmall
 谷粒商品商城项目
 
+------
+
+*@RestController* 注解有两个目的。
+
+- 首先他是一个类似于@controller和@Service的构造型注解，能够让类被组件扫描功能发现。但是，与REST最相关在于@RestController会告诉Spring，控制器中所有的处理器方法的返回值都要直接写入响应体中，而不是将值放到模型中并传递给一个视图以便于渲染。
+- 作为替代方案就是@Controller加上@Response。
+
+*@Api* 用在请求的类上，表示对类的说明
+
+- tags="说明该类的作用，可以在前台界面上看到的注解"
+
+- value="该参数无意义，在UI界面上看不到，不需要配置"
+
+*@RequestMapping* 注解是一个用来处理请求地址映射的注解，可用于映射一个请求或一个方法，可以用在类或方法上。格式如下
+
+- @RequestMapping(value = “/get/{id}”, method = RequestMethod.GET)
+- @GetMapping("/get/{id}")
+
+*@GetMapping* 用于处理请求方法的*GET类型
+
+*@PostMapping* 用于处理请求方法的POST类型等
+
+*@ApiOperation* (value = “接口说明”, httpMethod = “接口请求方式”, response =“接口返回参数类型”, notes = “接口发布说明”)
+
+*@Autowired* 它可以对类成员变量、方法及构造函数进行标注，完成自动装配的工作，通过 @Autowired的使用来消除 set ，get方法
+
+*@Transactional* spring提供的声明式事务，开发者可以只使用注解或基于配置的 XML 来管理事务
+
+------
+
+
+
 ## 1.创建github远程代码仓库
 
 ssh：
@@ -105,6 +137,8 @@ zipkin启动器
 gateway启动器
 
 ## 4.搭建5个ms
+
+创建模块生成器使用 Spring Initializr
 
 gmall-pms：谷粒商城商品管理系统
 
@@ -748,7 +782,7 @@ gmall-gateway：谷粒商城网关系统
 
 流程
 
-![nginx加入之后的请求处理流程](image/nginx加入之后的请求处理流程.jpg)
+![nginx加入之后的请求处理流程](images/nginx加入之后的请求处理流程.jpg)
 
 ## 13.前后联调
 
@@ -774,15 +808,15 @@ gmall-gateway：谷粒商城网关系统
 
 ## 14.跨域问题
 
-![跨域问题](image/跨域问题.png)
+![跨域问题](images/跨域问题.png)
 
 访问品牌管理失败
 
-![image-20230309120414016](image/image-20230309120414016.png)
+![image-20230309120414016](images/image-20230309120414016.png)
 
 从连接“http://manager.gmall.com”访问“http://api.gmall.com/pms/brand?t=1678334331159&pageNum=1&pageSize=10&key=”的XMLHttpRequest已被CORS策略阻止:对预检请求的响应没有通过访问控制检查:所请求的资源上没有'Access- control - allow - origin '标头。
 
-![image-20230309120339167](image/image-20230309120339167.png)
+![image-20230309120339167](images/image-20230309120339167.png)
 
 跨域：浏览器的同源策略导致的 
 
@@ -842,7 +876,7 @@ http://api.gmall.com:10010/pms/brand
 
 2. 网关配置：在 **application.yml** 配置 `spring.cloud.gateway.globalcors.cors-cofigurations`
 
-   ![image-20230309142513517](image/image-20230309142513517.png)
+   ![image-20230309142513517](images/image-20230309142513517.png)
 
    需要新建Map<K,V>
 
@@ -922,7 +956,7 @@ http://manager.gmall.com/
 
 查看
 
-![image-20230309153812948](image/image-20230309153812948.png)
+![image-20230309153812948](images/image-20230309153812948.png)
 
 ## 16.图片上传
 
@@ -936,19 +970,19 @@ http://manager.gmall.com/
 
    bucket列表
 
-   ![image-20230309162258504](image/image-20230309162258504.png)
+   ![image-20230309162258504](images/image-20230309162258504.png)
 
    创建bucket（选择低频访问存储，公共读）
 
-   ![bucket](image/bucket.png)
+   ![bucket](images/bucket.png)
 
    跨域设置规则
 
-   ![image-20230309161840088](image/image-20230309161840088.png)
+   ![image-20230309161840088](images/image-20230309161840088.png)
 
 3. 查看上传图片的请求网址
 
-   ![image-20230309155823706](image/image-20230309155823706.png)
+   ![image-20230309155823706](images/image-20230309155823706.png)
 
    可以看出上传图片的请求网址是 http://api.gmall.com/pms/oss/policy?t=1678348677810
 
@@ -960,15 +994,15 @@ http://manager.gmall.com/
 
    AccessKey管理
 
-   ![image-20230309162623716](image/image-20230309162623716.png)
+   ![image-20230309162623716](images/image-20230309162623716.png)
 
    使用子用户 -> 创建用户
 
-   ![image-20230309162542733](image/image-20230309162542733.png)
+   ![image-20230309162542733](images/image-20230309162542733.png)
 
    用户
 
-   ![image-20230309161717647](image/image-20230309161717647.png)
+   ![image-20230309161717647](images/image-20230309161717647.png)
 
    获取到 
 
@@ -978,17 +1012,17 @@ http://manager.gmall.com/
 
    添加权限（AliyunOSSFullAccess：表示所有权限）
 
-   ![image-20230309163831516](image/image-20230309163831516.png)
+   ![image-20230309163831516](images/image-20230309163831516.png)
 
 5. gmall-eyvren -> 概述 -> 外网访问
 
-   ![image-20230309164454411](image/image-20230309164454411.png)
+   ![image-20230309164454411](images/image-20230309164454411.png)
 
    获取到地域节点： `oss-cn-shanghai.aliyuncs.com`
 
 6. bucket列表 -> bucket名称 -> 复制 gmall-eyvren
 
-   ![image-20230309164608649](image/image-20230309164608649.png)
+   ![image-20230309164608649](images/image-20230309164608649.png)
 
    获取到bucket名称：`gmall-eyvren`
 
@@ -1094,28 +1128,6 @@ http://manager.gmall.com/
    }
    ```
 
-> *@RestController* 注解有两个目的。
->
-> - 首先他是一个类似于@controller和@Service的构造型注解，能够让类被组件扫描功能发现。但是，与REST最相关在于@RestController会告诉Spring，控制器中所有的处理器方法的返回值都要直接写入响应体中，而不是将值放到模型中并传递给一个视图以便于渲染。
-> - 作为替代方案就是@Controller加上@Response。
->
-> *@Api* 用在请求的类上，表示对类的说明
->
-> - tags="说明该类的作用，可以在前台界面上看到的注解"
->
-> - value="该参数无意义，在UI界面上看不到，不需要配置"
->
-> *@RequestMapping* 注解是一个用来处理请求地址映射的注解，可用于映射一个请求或一个方法，可以用在类或方法上。格式如下
->
-> - @RequestMapping(value = “/get/{id}”, method = RequestMethod.GET)
-> - @GetMapping("/get/{id}")
->
-> *@GetMapping* 用于处理请求方法的*GET类型
->
-> *@PostMapping* 用于处理请求方法的POST类型等
->
-> *@ApiOperation* (value = “接口说明”, httpMethod = “接口请求方式”, response =“接口返回参数类型”, notes = “接口发布说明”)
-
 ## 17.商品分类
 
 1. 请求网址：http://api.gmall.com/pms/category/parent/-1
@@ -1154,7 +1166,7 @@ http://manager.gmall.com/
 
 3. 找到需要的数据库
 
-   ![image-20230310190134779](image/image-20230310190134779.png)
+   ![image-20230310190134779](images/image-20230310190134779.png)
 
 4. 在 **gmall-pms/src/main/java/com/atguigu/gmall/pms/controller** 路径下找到 **CategoryController.java** 新建一个商品分类查询
 
@@ -1238,7 +1250,7 @@ SKU：Stock Keeping Unit，库存量单元，因具体特征不同而细分的�
 
   2、客户信息表，作为基本信息，很少改动‘客户名称’，所以虽然多加了一个动作，对性能不会有多大影响。
 
-![image-20230312141559480](image/image-20230312141559480.png)
+![image-20230312141559480](images/image-20230312141559480.png)
 
 ## 19.属性维护
 
@@ -1246,7 +1258,7 @@ SKU：Stock Keeping Unit，库存量单元，因具体特征不同而细分的�
 
 查看请求，发现只有在点击三级分类后才会发送要查分类的属性组
 
-![image-20230312142133679](image/image-20230312142133679.png)
+![image-20230312142133679](images/image-20230312142133679.png)
 
 > 请求网址: http://api.gmall.com/pms/attrgroup/category/225
 >
@@ -1278,7 +1290,7 @@ public ResponseVo<List<AttrGroupEntity>> queryAttrGroupByCid(@PathVariable("cid"
 
 在查询三级分类下的分组之后，点击属性分组中的维护属性，查看请求
 
-![20230312151926](image/20230312151926.png)
+![20230312151926](images/20230312151926.png)
 
 > 请求网址: http://api.gmall.com/pms/attr/group/1
 >
@@ -1305,7 +1317,7 @@ public ResponseVo<List<AttrEntity>> queryAttrByGid(@PathVariable("gid")Long gid)
 
 在查询spu列表，点击商品管理中的商品列表，查看请求
 
-![image-20230312155508142](image/image-20230312155508142.png)
+![image-20230312155508142](images/image-20230312155508142.png)
 
 > 请求网址: http://api.gmall.com/pms/spu/category/0?t=1678668817542&pageNum=1&pageSize=10&key=
 >
@@ -1351,7 +1363,7 @@ logging:
 
 即可显示输出日志
 
-![image-20230313190622886](image/image-20230313190622886.png)
+![image-20230313190622886](images/image-20230313190622886.png)
 
 
 
@@ -1411,7 +1423,7 @@ public PageResultVo querySpuByCategoryIdPage(Long categoryId, PageParamVo paramV
 
 在查询spu的所有sku信息，点击库存管理中的商品库存，查看请求
 
-![image-20230313181630307](image/image-20230313181630307.png)
+![image-20230313181630307](images/image-20230313181630307.png)
 
 > 请求网址: http://api.gmall.com/pms/sku/spu/7
 >
@@ -1570,7 +1582,7 @@ public ResponseVo<List<SkuEntity>> querySkuBySpuId(@PathVariable("spuId")Long sp
 
 在获取某个sku的库存信息，点击库存管理 -> 商品库存 -> 库存维护 -> 在点击sku维护中的库存维护，查看请求
 
-![image-20230313201357264](image/image-20230313201357264.png)
+![image-20230313201357264](images/image-20230313201357264.png)
 
 > 请求网址: http://api.gmall.com/wms/waresku/sku/1
 >
@@ -1592,31 +1604,1131 @@ public ResponseVo<List<WareSkuEntity>> querWartSkuBySkuId(@PathVariable("skuId")
 
 点击库存维护，还是没有数据，但是请求以及获取成功了
 
-![image-20230313203009693](image/image-20230313203009693.png)
+![image-20230313203009693](images/image-20230313203009693.png)
 
 查看数据库发现表 **wms_ware_sku** 的 **sku_id** 没有为1的数据
 
-![image-20230313203052466](image/image-20230313203052466.png)
+![image-20230313203052466](images/image-20230313203052466.png)
 
 可以修改或添加数据库中的数据来进行查看
 
 ## 24.查询分类下的组及规格参数
 
-在查询分类下的组及规格参数，点击商品管理 -> 商品列表中的添加spu -> 录入spu基本信息 -> 商品名称 -> 选择分类（选择到第三级分类时要双击，第一次点击是查看还有没有4级分类，第二次点击选中该分类）
+①在查询分类下的组及规格参数，点击商品管理 -> 商品列表中的添加spu -> 录入spu基本信息 -> 商品名称 -> 选择分类（选择到第三级分类时要双击，第一次点击是查看还有没有4级分类，第二次点击选中该分类）
 
-![image-20230313205447230](image/image-20230313205447230.png)
+![image-20230313205447230](images/image-20230313205447230.png)
 
 > 请求网址: http://api.gmall.com/pms/attrgroup/withattrs/225
 >
 > 请求方法: GET
 
+②在 **gmall-pms/src/main/java/com/atguigu/gmall/pms/controller** 目录下找到 **AttrGroupController.java**
+
+AttrGroupController.java
+
+```java
+@GetMapping("/withattrs/{catId}")
+@ApiOperation("查询分类下的组及规格参数")
+public ResponseVo<List<AttrGroupEntity>> queryAttrGroupByCatId(@PathVariable("catId")Long catId){
+List<AttrGroupEntity> attrGroupEntityList = this.attrGroupService.queryAttrGroupByCatId(catId);
+
+return ResponseVo.ok(attrGroupEntityList);
+}
+```
+
+③在 **gmall-pms/src/main/java/com/atguigu/gmall/pms/service/AttrGroupService.java** 接口中创建这个抽象方法 `queryAttrGroupByCatId`
+
+AttrGroupService.java
+
+```java
+List<AttrGroupEntity> queryAttrGroupByCatId(Long catId);
+```
+
+④在 **gmall-pms/src/main/java/com/atguigu/gmall/pms/service/impl/AttrGroupServiceImpl.java** 这个类中实现这个接口 `queryAttrGroupByCatId`
+
+AttrGroupServiceImpl.java
+
+```java
+/*
+* @Autowired 它可以对类成员变量、方法及构造函数进行标注，完成自动装配的工作，通过 @Autowired的使用来消除 set ，get方法
+* queryGroupsWithAttrsByCid 要用到 AttrMapper 表类，来创建list集合，所以要自动装配 AttrMapper
+* */
+@Autowired
+private AttrMapper attrMapper;
+
+/*
+* 有两种查法
+* 1.关联：用 pms_attr_group 关联 pms_attr 进行查询
+* 2.分布查询：先查询 pms_attr_group 表，连接字段 category_id = catId ；在通过 pms_attr 表，连接字段 group_id = pms_attr_group.id
+* 推荐使用：分布查询，因为在互联网项目中，数据表都比较大，关联查询消耗的资源多，导致性能降低
+* .eq("type",1) 表示我只要spu的基本属性属性，在表 pms_attr 中字段 type ，0-销售属性、1-基本属性、2-既是销售属性又是基本属性
+* */
+@Override
+public List<AttrGroupEntity> queryAttrGroupByCatId(Long catId) {
+    // 查询分组
+    List<AttrGroupEntity> attrGroupEntityList = this.list(new QueryWrapper<AttrGroupEntity>().eq("category_id", catId));
+
+    // 进行判空
+    if(CollectionUtils.isEmpty(attrGroupEntityList)){
+        return attrGroupEntityList;
+    }
+
+    // 遍历分组查询每一个分组下的规格参数列表
+    attrGroupEntityList.forEach(attrGroupEntity -> {
+        List<AttrEntity> attrEntityList = this.attrMapper.selectList(new QueryWrapper<AttrEntity>().eq("group_id", attrGroupEntity.getId()).eq("type",1));
+        attrGroupEntity.setAttrEntities(attrEntityList);
+    });
+
+    return attrGroupEntityList;
+}
+```
+
+## 25.查询分类下的规格参数
+
+在查询分类下的规格参数，点击商品管理 -> 商品列表 -> 添加spu -> 录入spu基本信息 -> 下一步 -> 录入spu属性信息 -> 下一步，查看请求
+
+![image-20230314182444555](images/image-20230314182444555.png)
+
+> 请求网址: http://api.gmall.com/pms/attr/category/225?type=0
+>
+> 请求方法: GET
+
+在 **gmall-pms/src/main/java/com/atguigu/gmall/pms/controller** 包中找到 **AttrController.java** 
+
+AttrController.java
+
+```java
+@GetMapping("/category/{cid}")
+@ApiOperation("查询分类下的规格参数")
+public ResponseVo<List<AttrEntity>> queryAttrByCidTypeSearchType(
+
+    // @RequestParam("type")Integer type 默认是必须的，而接口文档可要可不要
+    //有两种处理方式
+    // 1.第一种 @RequestParam("type",required = false)，required 默认是ture
+    // 2.第二种 @RequestParam("type",defaultValue = )，defaultValue 表示设置默认值
+    // 优先使用 defaultValue ，如果不能则使用 required
+    // 这里无法使用 defaultValue
+    @PathVariable("cid")Long cid,
+    @RequestParam(value = "type",required = false)Integer type,
+    @RequestParam(value = "searchType",required = false)Integer searchType
+){
+
+    List<AttrEntity> attrEntityList = this.attrService.queryAttrByCidTypeSearchType(cid,type,searchType);
+
+    return ResponseVo.ok(attrEntityList);
+}
+```
+
+在 **gmall-pms/src/main/java/com/atguigu/gmall/pms/service/AttrService.java** 接口中创建 `queryAttrByCidTypeSearchType` 这个抽象方法
+
+AttrService.java
+
+```java
+List<AttrEntity> queryAttrByCidTypeSearchType(Long cid, Integer type, Integer searchType);
+```
+
+在 **gmall-pms/src/main/java/com/atguigu/gmall/pms/service/impl/AttrServiceImpl.java** 这个类中实现 `queryAttrByCidTypeSearchType` 这个接口
+
+AttrServiceImpl.java
+
+```java
+@Override
+public List<AttrEntity> queryAttrByCidTypeSearchType(Long cid, Integer type, Integer searchType) {
+    QueryWrapper<AttrEntity> attrEntityQueryWrapper = new QueryWrapper<AttrEntity>().eq("category_id", cid);
+
+    // 进行判空
+    if (type != null){
+        attrEntityQueryWrapper.eq("type", type);
+    }
+    if (searchType != null){
+        attrEntityQueryWrapper.eq("search_type", searchType);
+    }
+
+
+    return this.list(attrEntityQueryWrapper);
+}
+```
+
+## 26.保存问题
+
+添加spu数据发现，没有创建时间和更新时间
+
+![image-20230314202254649](images/image-20230314202254649.png)
+
+到数据库中查看，发现 pms_spu 有我们录入的数据，而 pms_spu_attr_value、pms_spu_desc表中没有我们录入的spu数据
+
+![image-20230314202415707](images/image-20230314202415707.png)
+
+![image-20230314202619665](images/image-20230314202619665.png)
+
+![image-20230314202639302](images/image-20230314202639302.png)
+
+默认的保存是保存不了我们录入的数据的，所以我们要自定义一个保存方法，来去实现这样的保存
+
+## 27.sku
+
+### ①查看请求
+
+在spu添加步骤里面的数据，是怎么传过去的呢？传的是什么类型的数据呢？我们要去接收，点击spu添加步骤 -> 录入sku相关信息 -> 确认保存，查看请求
+
+![image-20230314203700229](images/image-20230314203700229.png)
+
+> 请求网址: http://api.gmall.com/pms/spu/category/0?t=1678796970458&pageNum=1&pageSize=10&key=
+>
+> 请求方法: GET
+>
+> 这个请求是一个回显的请求，保存成功的回显“保存成功，操作成功！”，可以不用管他，之前已经做好了
+
+![image-20230314203028118](images/image-20230314203028118.png)
+
+> 请求网址: http://api.gmall.com/pms/spu
+>
+> 请求方法: POST
+
+### ②找到请求走的方法
+
+在 **gmall-pms/src/main/java/com/atguigu/gmall/pms/controller** 目录下找到 **SpuController.java** 类
+
+SpuController.java
+
+```java
+// 请求里面没有方法路径，那么它应该走下面的@PostMapping请求
+/**
+* 保存
+*/
+@GetMapping("{id}")
+@ApiOperation("详情查询")
+public ResponseVo<SpuEntity> querySpuById(@PathVariable("id") Long id){
+    SpuEntity spu = spuService.getById(id);
+
+    return ResponseVo.ok(spu);
+}
+```
+
+### ③查看JSON数据
+
+在 Payload（载荷）中可以看到请求的载荷数据，就是一个 JSON 数据，需要封装一个对象类接收这样一个 JSON 数据
+
+![image-20230314205525924](images/image-20230314205525924.png)
+
+可以找一个 https://www.bejson.com/ JSON格式化工具来进行JSON的查看
+
+```json
+{
+	"name": "红米K40",
+	"brandId": 3,
+	"categoryId": 225,
+	"publishStatus": 0,
+	"spuImages": ["https://gmall-eyvren.oss-cn-shanghai.aliyuncs.com/2023-03-14/35bca589-809a-4553-8754-6d61625c35f6_q (7).jpg", "https://gmall-eyvren.oss-cn-shanghai.aliyuncs.com/2023-03-14/9e585085-684e-4fbc-8b63-4f64fa228089_q (3).jpg"],
+	"baseAttrs": [{
+		"attrId": 1,
+		"attrName": "上市年份",
+		"valueSelected": ["2021"]
+	}, {
+		"attrId": 2,
+		"attrName": "产品名称",
+		"valueSelected": ["小米10"]
+	}, {
+		"attrId": 6,
+		"attrName": "CPU品牌",
+		"valueSelected": ["骁龙"]
+	}, {
+		"attrId": 7,
+		"attrName": "CPU型号",
+		"valueSelected": ["骁龙865"]
+	}, {
+		"attrId": 8,
+		"attrName": "分辨率",
+		"valueSelected": ["2340*1080"]
+	}, {
+		"attrId": 9,
+		"attrName": "屏幕尺寸",
+		"valueSelected": ["6"]
+	}],
+	"skus": [{
+		"attr_3": "白色",
+		"name_3": "机身颜色",
+		"price": 0,
+		"stock": 0,
+		"growBounds": 0,
+		"buyBounds": 0,
+		"work": [0, 0, 0, 0],
+		"fullCount": 1,
+		"discount": 0,
+		"fullPrice": 0,
+		"reducePrice": 0,
+		"fullAddOther": 0,
+		"images": [],
+		"name": "红米K40 白色,8G,512G",
+		"title": "红米K40 白色,8G,512G",
+		"subTitle": "红米K40 白色,8G,512G",
+		"weight": 0,
+		"attr_4": "8G",
+		"name_4": "运行内存",
+		"attr_5": "512G",
+		"name_5": "机身存储",
+		"saleAttrs": [{
+			"attrId": "3",
+			"attrName": "机身颜色",
+			"attrValue": "白色"
+		}, {
+			"attrId": "4",
+			"attrName": "运行内存",
+			"attrValue": "8G"
+		}, {
+			"attrId": "5",
+			"attrName": "机身存储",
+			"attrValue": "512G"
+		}]
+	}, {
+		"attr_3": "白色",
+		"name_3": "机身颜色",
+		"price": 0,
+		"stock": 0,
+		"growBounds": 0,
+		"buyBounds": 0,
+		"work": [0, 0, 0, 0],
+		"fullCount": 1,
+		"discount": 0,
+		"fullPrice": 0,
+		"reducePrice": 0,
+		"fullAddOther": 0,
+		"images": [],
+		"name": "红米K40 白色,8G,256G",
+		"title": "红米K40 白色,8G,256G",
+		"subTitle": "红米K40 白色,8G,256G",
+		"weight": 0,
+		"attr_4": "8G",
+		"name_4": "运行内存",
+		"attr_5": "256G",
+		"name_5": "机身存储",
+		"saleAttrs": [{
+			"attrId": "3",
+			"attrName": "机身颜色",
+			"attrValue": "白色"
+		}, {
+			"attrId": "4",
+			"attrName": "运行内存",
+			"attrValue": "8G"
+		}, {
+			"attrId": "5",
+			"attrName": "机身存储",
+			"attrValue": "256G"
+		}]
+	}, {
+		"attr_3": "白色",
+		"name_3": "机身颜色",
+		"price": 0,
+		"stock": 0,
+		"growBounds": 0,
+		"buyBounds": 0,
+		"work": [0, 0, 0, 0],
+		"fullCount": 1,
+		"discount": 0,
+		"fullPrice": 0,
+		"reducePrice": 0,
+		"fullAddOther": 0,
+		"images": [],
+		"name": "红米K40 白色,12G,512G",
+		"title": "红米K40 白色,12G,512G",
+		"subTitle": "红米K40 白色,12G,512G",
+		"weight": 0,
+		"attr_4": "12G",
+		"name_4": "运行内存",
+		"attr_5": "512G",
+		"name_5": "机身存储",
+		"saleAttrs": [{
+			"attrId": "3",
+			"attrName": "机身颜色",
+			"attrValue": "白色"
+		}, {
+			"attrId": "4",
+			"attrName": "运行内存",
+			"attrValue": "12G"
+		}, {
+			"attrId": "5",
+			"attrName": "机身存储",
+			"attrValue": "512G"
+		}]
+	}, {
+		"attr_3": "白色",
+		"name_3": "机身颜色",
+		"price": 0,
+		"stock": 0,
+		"growBounds": 0,
+		"buyBounds": 0,
+		"work": [0, 0, 0, 0],
+		"fullCount": 1,
+		"discount": 0,
+		"fullPrice": 0,
+		"reducePrice": 0,
+		"fullAddOther": 0,
+		"images": [],
+		"name": "红米K40 白色,12G,256G",
+		"title": "红米K40 白色,12G,256G",
+		"subTitle": "红米K40 白色,12G,256G",
+		"weight": 0,
+		"attr_4": "12G",
+		"name_4": "运行内存",
+		"attr_5": "256G",
+		"name_5": "机身存储",
+		"saleAttrs": [{
+			"attrId": "3",
+			"attrName": "机身颜色",
+			"attrValue": "白色"
+		}, {
+			"attrId": "4",
+			"attrName": "运行内存",
+			"attrValue": "12G"
+		}, {
+			"attrId": "5",
+			"attrName": "机身存储",
+			"attrValue": "256G"
+		}]
+	}]
+}
+```
+
+### ④分析JSON数据，扩展字段
+
+添加一些扩展字段在 gmall-pms/src/main/java/com/atguigu/gmall/pms/vo 目录中
+
+SpuVo.java
+
+```java
+package com.atguigu.gmall.pms.vo;
+
+import com.atguigu.gmall.pms.entity.SpuEntity;
+import lombok.Data;
+
+import java.util.List;
+
+/**
+ * @ClassName SpuVo
+ * @Author 鳄鱼魜
+ * @Date 2023/3/15 19:50
+ * @Version 1.0
+ * @Description SpuEntity扩展字段
+ */
+@Data
+public class SpuVo extends SpuEntity {
+
+    // 可能有多张海报且都是字符串格式，所以用 List<String> 来接收
+    private List<String> spuImages;  // 海报信息
+
+    private List<SpuAttrValueVo> baseAttrs;  // 基本属性
+
+    private List<SkuVo> skus;   // sku信息
+}
+```
+
+SpuAttrValueVo.java
+
+```java
+package com.atguigu.gmall.pms.vo;
+
+import com.atguigu.gmall.pms.entity.SpuAttrValueEntity;
+import lombok.Data;
+import org.apache.tomcat.util.buf.StringUtils;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+
+/**
+ * @ClassName SpuAttrValueVo
+ * @Author 鳄鱼魜
+ * @Date 2023/3/15 20:06
+ * @Version 1.0
+ * @Description SpuAttrValueEntity扩展字段
+ */
+
+public class SpuAttrValueVo extends SpuAttrValueEntity {
+
+    // 使 JSON 字符 valueSelected 直接存到中的 attr_Value 字段中
+    // 因为属性可能有多选且都是字符串来接收，所以用 List<String> 来接收 JSON 数据
+    public void setValueSelected(List<String> valueSelected) {
+
+        // 做一个判空，如果为空则 return
+        if(CollectionUtils.isEmpty(valueSelected)){
+            return;
+        }
+
+        // StringUtils.join 可以用来拼接字符串
+        // StringUtils.split 可以用来分割字符串
+        // 多选的属性用 , 来分割
+        this.setAttrValue(StringUtils.join(valueSelected, ','));
+    }
+}
+```
+
+SkuVo.java
+
+```java
+package com.atguigu.gmall.pms.vo;
+
+import com.atguigu.gmall.pms.entity.SkuAttrValueEntity;
+import com.atguigu.gmall.pms.entity.SkuEntity;
+import lombok.Data;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+/**
+ * @ClassName SkuVo
+ * @Author 鳄鱼魜
+ * @Date 2023/3/16 14:57
+ * @Version 1.0
+ * @Description SkuEntity的扩展字段
+ */
+@Data
+public class SkuVo extends SkuEntity {
+
+    // 积分优惠相关字段，在数据库 guli_sms 的 sms_sku_bounds 表里
+    /**
+     * 成长积分
+     */
+    private BigDecimal growBounds;
+    /**
+     * 购物积分
+     */
+    private BigDecimal buyBounds;
+    /**
+     * 优惠生效情况[1111（四个状态位，从右到左）;0 - 无优惠，成长积分是否赠送;1 - 无优惠，购物积分是否赠送;2 - 有优惠，成长积分是否赠送;3 - 有优惠，购物积分是否赠送【状态位0：不赠送，1：赠送】]
+     */
+    // "work":[0,0,1,1]，因为传过来的参数是一个集合所以要使用 List<> 类型
+    private List<Integer> work;
+
+    // 打折优惠信息相关的字段，在数据库 guli_sms 的 sms_sku_ladder 表中
+    /**
+     * 满几件
+     */
+    private Integer fullCount;
+    /**
+     * 打几折
+     */
+    private BigDecimal discount;
+    /**
+     * 是否叠加其他优惠[0-不可叠加，1-可叠加]
+     */
+    // 前端传过来的数据中有 fullAddOther 和 ladderAddOther 字段，为了区别开了加了前缀 full 和 ladder ，ladderAddOther 想要传到 sms_sku_ladder 表中 add_Other 字段上，这个别名要与页面一致
+    private Integer ladderAddOther;
+
+    // 满减优惠相关的字段，在数据库 guli_sms 的 sms_sku_bounds 表中
+    /**
+     * 满多少
+     */
+    private BigDecimal fullPrice;
+    /**
+     * 减多少
+     */
+    private BigDecimal reducePrice;
+    /**
+     * 是否参与其他优惠
+     */
+    // 这个是用来接收 fullAddOther 字段到 sms_sku_bounds 表中的 add_Other，别名与传参一致
+    private Integer fullAddOther;
+
+    // sku图片信息
+    private List<String> images;
+
+    // 销售属性是一个集合，所以用List<salAttrs>来接收，salAttrs对应的是数据库 guli_pms 表是 pms_sku_attr_value
+    private List<SkuAttrValueEntity> saleAttrs;
+}
+```
+
+SkuSaleVo.java
+
+```java
+package com.atguigu.gmall.pms.vo;
+
+import lombok.Data;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+/**
+ * @ClassName SkuSaleVo
+ * @Author 鳄鱼魜
+ * @Date 2023/3/17 19:49
+ * @Version 1.0
+ * @Description 自己封装一个SkuVo字段
+ */
+@Data
+public class SkuSaleVo {
+
+    private Long skuId;
+
+    // 积分优惠相关字段，在数据库 guli_sms 的 sms_sku_bounds 表里
+    /**
+     * 成长积分
+     */
+    private BigDecimal growBounds;
+    /**
+     * 购物积分
+     */
+    private BigDecimal buyBounds;
+    /**
+     * 优惠生效情况[1111（四个状态位，从右到左）;0 - 无优惠，成长积分是否赠送;1 - 无优惠，购物积分是否赠送;2 - 有优惠，成长积分是否赠送;3 - 有优惠，购物积分是否赠送【状态位0：不赠送，1：赠送】]
+     */
+    // "work":[0,0,1,1]，因为传过来的参数是一个集合所以要使用 List<> 类型
+    private List<Integer> work;
+
+    // 打折优惠信息相关的字段，在数据库 guli_sms 的 sms_sku_ladder 表中
+    /**
+     * 满几件
+     */
+    private Integer fullCount;
+    /**
+     * 打几折
+     */
+    private BigDecimal discount;
+    /**
+     * 是否叠加其他优惠[0-不可叠加，1-可叠加]
+     */
+    // 前端传过来的数据中有 fullAddOther 和 ladderAddOther 字段，为了区别开了加了前缀 full 和 ladder ，ladderAddOther 想要传到 sms_sku_ladder 表中 add_Other 字段上，这个别名要与页面一致
+    private Integer ladderAddOther;
+
+    // 满减优惠相关的字段，在数据库 guli_sms 的 sms_sku_bounds 表中
+    /**
+     * 满多少
+     */
+    private BigDecimal fullPrice;
+    /**
+     * 减多少
+     */
+    private BigDecimal reducePrice;
+    /**
+     * 是否参与其他优惠
+     */
+    // 这个是用来接收 fullAddOther 字段到 sms_sku_bounds 表中的 add_Other，别名与传参一致
+    private Integer fullAddOther;
+
+}
+```
+
+在目录 **gmall-sms/src/main/java/com/atguigu/gmall/sms/vo** 下创建营销信息的扩展字段
+
+SkuSaleVo.java
+
+```java
+package com.atguigu.gmall.sms.vo;
+
+import lombok.Data;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+/**
+ * @ClassName SkuSaleVo
+ * @Author 鳄鱼魜
+ * @Date 2023/3/17 19:49
+ * @Version 1.0
+ * @Description 自己封装一个SkuVo字段
+ */
+@Data
+public class SkuSaleVo {
+
+    private Long skuId;
+
+    // 积分优惠相关字段，在数据库 guli_sms 的 sms_sku_bounds 表里
+    /**
+     * 成长积分
+     */
+    private BigDecimal growBounds;
+    /**
+     * 购物积分
+     */
+    private BigDecimal buyBounds;
+    /**
+     * 优惠生效情况[1111（四个状态位，从右到左）;0 - 无优惠，成长积分是否赠送;1 - 无优惠，购物积分是否赠送;2 - 有优惠，成长积分是否赠送;3 - 有优惠，购物积分是否赠送【状态位0：不赠送，1：赠送】]
+     */
+    // "work":[0,0,1,1]，因为传过来的参数是一个集合所以要使用 List<> 类型
+    private List<Integer> work;
+
+    // 打折优惠信息相关的字段，在数据库 guli_sms 的 sms_sku_ladder 表中
+    /**
+     * 满几件
+     */
+    private Integer fullCount;
+    /**
+     * 打几折
+     */
+    private BigDecimal discount;
+    /**
+     * 是否叠加其他优惠[0-不可叠加，1-可叠加]
+     */
+    // 前端传过来的数据中有 fullAddOther 和 ladderAddOther 字段，为了区别开了加了前缀 full 和 ladder ，ladderAddOther 想要传到 sms_sku_ladder 表中 add_Other 字段上，这个别名要与页面一致
+    private Integer ladderAddOther;
+
+    // 满减优惠相关的字段，在数据库 guli_sms 的 sms_sku_bounds 表中
+    /**
+     * 满多少
+     */
+    private BigDecimal fullPrice;
+    /**
+     * 减多少
+     */
+    private BigDecimal reducePrice;
+    /**
+     * 是否参与其他优惠
+     */
+    // 这个是用来接收 fullAddOther 字段到 sms_sku_bounds 表中的 add_Other，别名与传参一致
+    private Integer fullAddOther;
+
+}
+```
+
+
+
+### ⑤营销信息的保存接口
+
+我们的营销信息不在数据库 guli_pms，在数据库 guli_sms，所以我们要创建 sms 的远程接口，时营销信息可以保存在你一个数据库 guli_sms 中
+
+在 **gmall-sms/src/main/java/com/atguigu/gmall/sms/controller**
+
+目录下创建的请求
+
+SkuBoundsController.java
+
+```java
+@Autowired
+private SkuBoundsService skuBoundsService;
+
+//    @GetMapping("sales/save")   不可以使用 get 请求
+@PostMapping("sales/save")
+public ResponseVo saveSales(@RequestBody SkuSaleVo skuSaleVo){
+    this.skuBoundsService.saveSales(skuSaleVo);
+
+    return ResponseVo.ok();
+}
+```
+
+> feign是一个简化版的http协议，所以它传的参数是有限制的
+>
+> feign支持发传参方式有以下几种
+>
+> 1. 普通参数：?	不支持form表单
+>    - @RequestParam	一一接收（不超过3个参数可以使用这种方式，超过3个就不要去使用了）
+>    - 不支持对象接收参数
+> 2. 占位符（xxx）
+>    - @PathVariables	（接收参数只能是一个会两个，太多容易和其他请求产生冲突）
+> 3. JSON方式 （可以支持传递很多的参数，只支持POST请求，不支持get请求）
+>    - @RequestBody	接收参数
+
+在接口 SkuBoundsService 中封装一个 SkuSaleVo ，完成对 saveSales 的封装
+
+```java
+void saveSales(SkuSaleVo skuSaleVo);
+```
+
+在这个 **gmall-sms/src/main/java/com/atguigu/gmall/sms/service/impl** 目录中实现 saveSales 接口方法
+
+SkuBoundsServiceImpl.java
+
+```java
+@Override
+public void saveSales(SkuSaleVo skuSaleVo) {
+    // 3.1 保存sms_sku_bounds
+    SkuBoundsEntity skuBoundsEntity = new SkuBoundsEntity();
+    BeanUtils.copyProperties(skuSaleVo, skuBoundsEntity);   // 将 skuSaleVo 拷贝到 skuBoundsEntity
+    // 因为 SkuSaleVo 里面的 work 是 List<Integer> 类型，而我们 SkuBoundsEntity 里面的 work 是 Integer 类型，类型不一样无法 copy，要进行手动保存
+    List<Integer> work = skuSaleVo.getWork();
+    // 做非空判断
+    if (!CollectionUtils.isEmpty(work) && work.size() == 4){
+        // 在数据库中 work 的类型 tinyint是整数数据类型，范围存储-128到127的整数 存储数据要求 优惠生效情况[1111（四个状态位，从右到左）;0 - 无优惠，成长积分是否赠送;1 - 无优惠，购物积分是否赠送;2 - 有优惠，成长积分是否赠送;3 - 有优惠，购物积分是否赠送【状态位0：不赠送，1：赠送】]
+        skuBoundsEntity.setWork(work.get(3) *8 + work.get(2) *4 + work.get(1) * 2 + work.get(0));  // 将二进制的 work 转化成十进制放入 work
+    }
+    this.save(skuBoundsEntity);
+
+    // 3.2 保存sms_sku_full_reduction
+    SkuFullReductionEntity skuFullReductionEntity = new SkuFullReductionEntity();
+    BeanUtils.copyProperties(skuSaleVo, skuFullReductionEntity);   // 将 skuSaleVo 拷贝到 skuFullReductionEntity
+    skuFullReductionEntity.setAddOther(skuSaleVo.getFullAddOther());    // 在 SkuSaleVo 中的别名叫 fullAddOther，在实体类 SkuFullReductionEntity 中叫 addother，不一致所以要手动设置一下
+    this.skuFullReductionMapper.insert(skuFullReductionEntity);
+
+    // 3.3 保存sms_sku_ladder
+    SkuLadderEntity skuLadderEntity = new SkuLadderEntity();
+    BeanUtils.copyProperties(skuSaleVo,skuLadderEntity);    // 将 skuSaleVo 拷贝到 skuLadderEntity
+    skuLadderEntity.setAddOther(skuSaleVo.getLadderAddOther()); // 在 skuSaleVo 类中 ladderAddOther 和 addOther 类中 addOther，别名不一致无法对应，所以要手动设置
+    this.skuLadderMapper.insert(skuLadderEntity);
+
+}
+```
+
+### ⑥大保存方法实现
+
+在 gmall-pms/src/main/java/com/atguigu/gmall/pms/controller/SpuController.java 类中，将请求走的方法 *save* 修改成下面方式
+
+SpuController.java
+
+```java
+/**
+* 保存
+*/
+@PostMapping
+@ApiOperation("保存")
+public ResponseVo<Object> save(@RequestBody SpuVo spu){
+    //		spuService.save(spu);
+    spuService.bigSave(spu);
+
+    return ResponseVo.ok();
+}
+```
+
+在 gmall-pms/src/main/java/com/atguigu/gmall/pms/service/SpuService.java 接口中创建大保存方法 bigSave
+
+SpuService.java
+
+```java
+void bigSave(SpuVo spu);
+```
+
+在 gmall-pms/src/main/java/com/atguigu/gmall/pms/service/impl/SpuServiceImpl.java 这个类中实现大保存方法 bigSave
+
+步骤：
+
+1. 保存spu相关表
+   1. 保存pms_spu
+      1. 设置创建时间
+      2. 设置更新时间
+   2. 保存pms_spu_desc
+   3. 保存pms_spu_attr_value
+2. 保存sku相关表
+   1. 保存pms_sku
+   2. 保存pms_images
+   3. 保存pms_sku_attr_value
+3. 保存营销信息相关表
+   1. 保存sms_sku_bounds
+   2. 保存sms_sku_full_reduction
+   3. 保存sms_sku_ladder
+
+SpuServiceImpl.java
+
+```java
+package com.atguigu.gmall.pms.service.impl;
+
+import com.alibaba.csp.sentinel.util.StringUtil;
+import com.atguigu.gmall.pms.entity.*;
+import com.atguigu.gmall.pms.feign.GmallSmsClient;
+import com.atguigu.gmall.pms.mapper.*;
+import com.atguigu.gmall.pms.service.*;
+import com.atguigu.gmall.pms.vo.SkuSaleVo;
+import com.atguigu.gmall.pms.vo.SkuVo;
+import com.atguigu.gmall.pms.vo.SpuAttrValueVo;
+import com.atguigu.gmall.pms.vo.SpuVo;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.atguigu.gmall.common.bean.PageResultVo;
+import com.atguigu.gmall.common.bean.PageParamVo;
+
+import org.springframework.util.CollectionUtils;
+
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+
+@Service("spuService")
+public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuEntity> implements SpuService {
+
+    @Autowired
+    private SpuDescMapper spuDescMapper;
+
+    /*
+    * 建议能用 Mapper 就不要用 Service，最好不要在 Service 中注入其他 Service
+    * */
+    @Autowired
+    private SpuAttrValueService spuAttrValueService;
+
+    @Autowired
+    private SkuMapper skuMapper;
+
+    @Autowired
+    private SkuImagesService skuImagesService;
+
+    @Autowired
+    private SkuAttrValueService skuAttrValueService;
+
+    @Autowired
+    private GmallSmsClient gmallSmsClient;
+
+    @Override
+    public PageResultVo queryPage(PageParamVo paramVo) {
+        IPage<SpuEntity> page = this.page(
+                paramVo.getPage(),
+                new QueryWrapper<SpuEntity>()
+        );
+
+        return new PageResultVo(page);
+    }
+
+
+    /*
+     * categoryId 传入品牌id
+     * this.page 调用了 IService 中的 page(分页条件，查询条件) 分页查询方法
+     * return PageResultVo(IPage page)
+     * */
+    @Override
+    public PageResultVo querySpuByCategoryIdPage(Long categoryId, PageParamVo paramVo) {
+        QueryWrapper<SpuEntity> spuEntityQueryWrapper = new QueryWrapper<>();
+
+        // 查询的sql语句.查本类：select * from pms_spu where category_id='225' AND (id='7'OR name LIKE '%7%');
+        // 查询的sql语句.查全站：select * from pms_spu where (id='7'OR name LIKE '%7%');
+        // 1.添加查询条件
+        if (categoryId != 0) {
+            spuEntityQueryWrapper.eq("category_id",categoryId);
+        }
+
+        // 2.拿到关键字
+        String key = paramVo.getKey();
+        //
+        /*
+        * StringUtil 选择 com.alibaba.csp.sentinel.util.StringUtil
+        * isNotBlank 做了一个空格Whitespace的判断
+        * and(函数式接口)
+        * 函数式接口类型有以下四中种
+        * 消费型函数接口：  有参数没有返回结果集   t ->
+        * 供给型函数接口：  没有参数有返回结果集   () -> return
+        * 函数型函数接口：  既有参数又有返回结果集   t -> return
+        * 断言型函数接口：  有参数有返回结果集，但是返回结果集是 boolean 类型   t -> return boolean
+        * */
+        if(StringUtil.isNotBlank(key)){
+            spuEntityQueryWrapper.and(t ->t.eq("id" , key).or().like("name",key));
+        }
+
+        // 翻页查询
+        IPage<SpuEntity> page = this.page(
+                // 翻页对象
+                paramVo.getPage(),
+                // 查询条件
+                spuEntityQueryWrapper
+        );
+
+        return new PageResultVo(page);
+    }
+
+    /*
+    *
+    * */
+    @Override
+    public void bigSave(SpuVo spu) {
+        // 1.保存spu相关表
+        // 1.1 保存pms_spu
+        // 1.1.1 设置创建时间
+        spu.setCreateTime(new Date());      // Data() 获取系统时间
+        // 1.1.2 设置更新时间
+        spu.setUpdateTime(spu.getCreateTime());     // 不能直接去 new Date()，会出现毫秒级别的差异，会导致创建时出现时间不一样
+        this.save(spu);     // 将数据保存到数据库的表中
+        Long spuId = spu.getId();  //刚刚新增好后，主键回写就可以拿到spuId
+
+        // 1.2 保存pms_spu_desc
+        List<String> spuImages = spu.getSpuImages();// 保存时的海报信息
+
+        SpuDescEntity spuDescEntity = new SpuDescEntity();
+        spuDescEntity.setSpuId(spuId);  //因为表pms_spu_desc没有自动递增（自动递增会导致和其它表对不上，所以没有设置），所以进行手动设置
+        if(!CollectionUtils.isEmpty(spuImages)){    // 做一个非空判断
+            spuDescEntity.setSpuId(spuId);
+            spuDescEntity.setDecript(StringUtils.join(spuImages, ","));
+            this.spuDescMapper.insert(spuDescEntity);
+        }
+
+        // 1.3 保存pms_spu_attr_value
+        List<SpuAttrValueVo> baseAttrs = spu.getBaseAttrs();
+
+        if(!CollectionUtils.isEmpty(baseAttrs)){    // 做一个非空判断
+
+            List<SpuAttrValueEntity> collect = baseAttrs.stream().map(spuAttrValueVo -> {
+                SpuAttrValueEntity spuAttrValueEntity = new SpuAttrValueEntity();
+                BeanUtils.copyProperties(spuAttrValueVo, spuAttrValueEntity);   // 将 spuAttrValueVo copy spuAttrValueEntity，只有 Vo里面的字段和 Entity 字段一致，才可以使用 BeanUtils.copyProperties() 进行一一拷贝
+                spuAttrValueEntity.setSpuId(spuId); // 要手动保存 pms_spu_attr_value 表，的 spu_id 字段，因为前端没有传这个字段过来
+                return spuAttrValueEntity;
+            }).collect(Collectors.toList());    // 将 Vo 集合转换成 Entity 集合
+            this.spuAttrValueService.saveBatch(collect);       // saveBatch()批量保存到基本属性表，saveBatch 需要一个 Entity 集合，所以要将 Vo 集合转换成一个 Entity 集合
+        }
+        // 2.保存sku相关表
+        List<SkuVo> skus = spu.getSkus();   //获取sku信息
+        if(CollectionUtils.isEmpty(skus)){
+            return;
+        }
+        skus.forEach(skuVo -> {
+            // 2.1 保存pms_sku
+            skuVo.setSpuId(spuId);  // 这个数据前端没有，要手动设置
+            skuVo.setBrandId(spu.getBrandId());
+            skuVo.setCategoryId(spu.getCategoryId());
+            List<String> images = skuVo.getImages();    // 获取图片列表
+            if(!CollectionUtils.isEmpty(imagess)){
+                skuVo.setDefaultImage(StringUtils.isBlank(skuVo.getDefaultImage()) ? images.get(0) : skuVo.getDefaultImage());   // 设置默认图片，如果没有传递了默认图片，则使用第一张图片作为默认图片，否则使用传递过来的图片作为默认图片
+            }
+            this.skuMapper.insert(skuVo);   // 保存sku信息
+            Long skuId = skuVo.getId();   // 通过主键回写拿到 skuId 因为后续访问各种信息的时候我们都需要这个 skuId
+            // 2.2 保存pms_images
+            // 把图片的地址集合 转化成 图片的对象集合
+            if(!CollectionUtils.isEmpty(imagess)){
+                this.skuImagesService.saveBatch(imagess.stream().map(images->{
+                    SkuImagesEntity skuImagesEntity = new SkuImagesEntity();
+                    skuImagesEntity.setSkuId(skuId);
+                    skuImagesEntity.setUrl(images);
+                    skuImagesEntity.setDefaultStatus(StringUtil.equals(skuVo.getDefaultImage(), image) ? 1 : 0);    //判断是否是默认图片，如果是则为1，否则为0
+                    return skuImagesEntity;
+                }).collect(Collectors.toList()));
+            }
+            // 2.3 保存pms_sku_attr_value
+            List<SkuAttrValueEntity> saleAttrs = skuVo.getSaleAttrs();
+            saleAttrs.forEach(skuAttrValueEntity -> {
+                skuAttrValueEntity.setSkuId(skuId);     // 这个数据前端没有要手动添加
+            });
+            this.skuAttrValueService.saveBatch(saleAttrs);
+
+            // 3.保存营销信息相关表
+            // 在 gmall-sms 服务中写
+                // 3.1 保存sms_sku_bounds
+                // 3.2 保存sms_sku_full_reduction
+                // 3.3 保存sms_sku_ladder
+            SkuSaleVo skuSaleVo = new SkuSaleVo();
+            BeanUtils.copyProperties(skuVo, skuSaleVo);     // 将 skuVo 拷贝到 skuSaleVo
+            skuSaleVo.setSkuId(skuId);
+            this.gmallSmsClient.saveSales(skuSaleVo);
+        });
+    }
+
+}
+```
+
+## 28.feign的最佳实践
+
+1. 实体类冗余问题（如：pms中有个Vo实体类，sms中也有个Vo实体类，会导致该问题）
+
+   ![image-20230320195932658](imagess/image-20230320195932658.png)
+
+2. 接口方法书写问题（安全性隐患）
+
+3. 解决：
+
+   > 服务的提供方同时提供接口工程：gmall-sms-interface
+   >
+   > 1. 对外暴露的api接口方法
+   > 2. 共享实体类
+   >
+   > 玩法链接：https://docs.spring.io/spring-cloud-openfeign/docs/current/reference/html/#spring-cloud-feign-inheritance
+
+   1. 创建sms-interface,构建系统选择maven
+
+   2. 在把sms中的Vo包下的SkSaleVo复制到sms-interface
+
+   3. 把sms/vo/SkSaleVo和pms/vo/SkSaleVo删除
+
+   4. 在gmall-sms的pom.xml引入sms-interface工程
+
+   5. 在gmall-pms的pom.xml引入sms-interface工程
+
+   6. 在sms-interface的pom.xml引入gmall-common工程
+
+   7. 将 **gmall-pms/src/main/java/com/atguigu/gmall/pms/feign/GmallSmsClient.java** 中的saverSales复制到 **sms-interface/src/main/java/com/atguigu/gmall/sms/api/GmallSmsApi.java**
+
+      ```java
+      @PostMapping("sms/skubounds/sales/save")
+      ResponseVo saveSales(@RequestBody SkuSaleVo skuSaleVo);
+      ```
+
+   8. gmall-pms需要调用GmallSmsApi直接使用feign/GmallSmsClient 继承 GmallSmsApi
+
+      ```java
+      package com.atguigu.gmall.pms.feign;
+      
+      import com.atguigu.gmall.sms.api.GmallSmsApi;
+      import org.springframework.cloud.openfeign.FeignClient;
+      
+      @FeignClient("sms-service")
+      public interface GmallSmsClient extends GmallSmsApi {
+      }
+      ```
+
+   9. 查看 **gmall-sms/src/main/java/com/atguigu/gmall/sms/service/impl/SkuBoundsServiceImpl.java** 和  **gmall-pms/src/main/java/com/atguigu/gmall/pms/service/impl/SpuServiceImpl.java** 
+
+      如果保存 `SkuSaleVo` 报错，从新引入依赖即可
+
+## 29.事务
+
+事务概念：逻辑上的一组操作，组成这组操作的各个逻辑单元，要么都成功，要么都失败
+
+四个特性：ACID
+
+- A：Atomically，原子性。不可分割性，要么都执行要么都不执行
+- C：Consistency，一致性。要么都成功，要么都失败
+- I：Isolation，隔离性。事务之间互不影响
+- D：Durability，持久性。持久化到硬盘（不会丢失）
+
+常见问题：
+
+- 脏读				一个事务读取到另一个事务**未提交**的数据
+- 不可重复读     一个事务读去到另一个事务**已提交**的数据，==更新的数据==             
+  - 解决：行锁
+- 虚读、幻读     一个事务读取到另一个事务**已提交**的数据，==新增/删除的数据==
+  - 解决：表锁
+
+> 一般情况下：脏读是不允许发生的，不可重复读或者虚读/幻读是适当允许发生的
+
+隔离级别：
+
+- RU：Read Uncommitted，读未提交。
+  - 所有问题都会出现
+- RC：Read Committed，读已提交。
+  - 解决脏读问题Oracle
+- RR：Repeatable Read，可重复读。
+  - 解决脏读和不可重复读问题MySQL
+- SR：Serializable，序列化读。
+  - 解决所有问题
+
+> 隔离级别越高安全性越高，但是性能就会越低，一般情况下，选择RC RR
+
+```mysql
+MySQL查询隔离级别
+
+select @@transaction_isolation;
+```
+
+在 **gmall-pms/src/main/java/com/atguigu/gmall/pms/service/impl/SpuServiceImpl.java** 路径下
+
+给大保存方法添加注解 `@Transactional`
+
+```java
+@Transactional
+@Override
+public void bigSave(SpuVo spu) 
+```
 
 
 
 
 
 
- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1818,6 +2930,14 @@ public ResponseVo<List<WareSkuEntity>> querWartSkuBySkuId(@PathVariable("skuId")
    1. 判断登陆状态：登陆-userId	未登录-userKey
    2. 删除对应的购物车记录（skuId）
 
+> 总结
+>
+> 功能分析及存储方案的分析
+>
+> - redis（主 同步 下单查询 保证性能） + MySQL（辅 异步 数据分析/智能推荐）
+> - 两种状态：登陆状态的购物车 以及 未登录的购物车
+> - redis的数据模型：Map<userId/userKey>，Map<skuId,cartJson>
+
 ## 拦截器
 
 拦截器和过滤器（网关 servlet）区别？
@@ -1849,7 +2969,7 @@ public ResponseVo<List<WareSkuEntity>> querWartSkuBySkuId(@PathVariable("skuId")
   Filter的执行顺序在Interceptor之前，具体的流程见下图
   
 
-![img](image/866146943ca341ac97680acd2239fc3f.png)
+![img](images/866146943ca341ac97680acd2239fc3f.png)
 
 怎么实现拦截器？
 
@@ -1890,10 +3010,92 @@ public ResponseVo<List<WareSkuEntity>> querWartSkuBySkuId(@PathVariable("skuId")
    - request对象
    - ThreadLocal
      - Thread --> ThreadLocalMap<WeakReferenche<ThreadLocal>,载荷对象>
+     - remove 手动删除内容，以避免发生内存泄漏 tomcat线程池
+     - set get
 
-## 本地异步和分布式异步
+> 总结
+>
+> 拦截器统一获取登陆状态
+>
+> - 拦截器和过滤器的区别？
+> - 怎么实现拦截器？
+> - 怎么把登陆状态传递狗后续业务？
+
+## 声明式异步-springTask
 
 分布式异步：MQ，跨服务，性能稍低，可靠性高
 
-本地异步：多线程，服务内，性能高
+本地异步：多线程，服务内，性能较高，可靠性稍差
 
+​	编程式：4种方式
+
+​	声明式：
+
+获取子任务结果集
+
+
+
+捕获子任务异常
+
+1. try get 方法的异常
+2. 通过失败的监听
+3. 返回值是非 future 的情况：通过统一的异常处理器
+   1. 编写实现类实现AsyncUncaughtExceptionHandler接口
+   2. 编写配置类实现AsyncConfiguren接口
+
+配置线程池
+
+1. 配置类
+2. yml
+
+寄语
+
+1. 一定要配置线程池控制线程数
+2. 一定要优雅的关机
+3. 一定要配置同意的异常处理器
+
+## 比价、实时价格、价格同步
+
+1. 新增购物车时，同时新增实时价格缓存：`skuId:currentPrice`
+2. 查询购物车时，同时查询实时价格缓存：`skuId`
+3. pms 中修改了商品的价格，发送消息给 MQ ，购物车中获取消息同步价格
+
+## 分布式定时任务
+
+定时任务特征：
+
+- 时间驱动：月报 周报 季报 年报等
+- 异步执行：不会阻塞现有业务
+- 批量处理
+
+实现：
+
+1. jdk：`Timer` 定时器、定时任务线程池、死循环、延时队列等
+2. SpringScheduling：`@EnableScheduling` `Scheduled`
+3. quartz框架
+4. 分布式定时任务框架：xxxl-job elastic-job
+5. MQ延时队列 + 死信队列
+6. redis分布订阅
+7. netty时间轮
+
+场景：
+
+1. 报表：月报 年报 周报等等
+2. 购物车数据同步 redis -> MySQL
+3. MQ 生产这重发 和 消费者的重试
+4. 布隆过滤器的数据同步
+
+传统的定时任务存在的问题
+
+1. 单机
+2. 触发器和任务代码耦合
+3. 修改触发器需要重启
+4. 无法统一管理任务
+
+## xxl-job
+
+xxl-job-core：核心工程，xxl-jo相关工程需要引入该依赖
+
+xxl-job-admin：调度中心，提供了统一的管理控制台，可以统一管理并配置任务，触发任务
+
+xxl-job-executor-samples：执行器案例工程，执行器的本质就是一个工程，在执行器工程内可以编写任务代码，接收调度中心的调度并执行

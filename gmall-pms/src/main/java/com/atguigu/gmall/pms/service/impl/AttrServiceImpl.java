@@ -11,6 +11,8 @@ import com.atguigu.gmall.pms.mapper.AttrMapper;
 import com.atguigu.gmall.pms.entity.AttrEntity;
 import com.atguigu.gmall.pms.service.AttrService;
 
+import java.util.List;
+
 
 @Service("attrService")
 public class AttrServiceImpl extends ServiceImpl<AttrMapper, AttrEntity> implements AttrService {
@@ -23,6 +25,22 @@ public class AttrServiceImpl extends ServiceImpl<AttrMapper, AttrEntity> impleme
         );
 
         return new PageResultVo(page);
+    }
+
+    @Override
+    public List<AttrEntity> queryAttrByCidTypeSearchType(Long cid, Integer type, Integer searchType) {
+        QueryWrapper<AttrEntity> attrEntityQueryWrapper = new QueryWrapper<AttrEntity>().eq("category_id", cid);
+
+        // 进行判空
+        if (type != null){
+            attrEntityQueryWrapper.eq("type", type);
+        }
+        if (searchType != null){
+            attrEntityQueryWrapper.eq("search_type", searchType);
+        }
+
+
+        return this.list(attrEntityQueryWrapper);
     }
 
 }
